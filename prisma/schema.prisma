@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ReportType {
+  LOST
+  FOUND
+}
+
+model Report {
+  id          String     @id @default(uuid())
+  type        ReportType
+
+  title       String
+  category    String
+  description String?
+  color       String?
+  location    String
+  imageUrl    String?
+  contactEmail String
+
+  eventDate   DateTime
+  createdAt   DateTime   @default(now())
+
+  @@index([type])
+}
