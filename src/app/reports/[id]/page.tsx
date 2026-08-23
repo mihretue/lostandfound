@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatEventDate } from "@/lib/date";
 import ReportTypeBadge from "@/components/ReportTypeBadge";
 import MatchCard from "@/components/MatchCard";
-import { MatchResult } from "@/lib/matching";
+import { calculateMatch } from "@/lib/matching";
 import { Report } from "@prisma/client";
 
 async function getReport(id: string) {
@@ -14,36 +14,34 @@ async function getReport(id: string) {
   return report;
 }
 
-async function getMatches(id: string) {
-  // We fetch matches from the API route we created, using internal fetch or direct logic.
-  // Since we're in a Server Component, it's generally better to use Prisma/Logic directly, 
-  // but to reuse the API logic as the prompt described, we can do an absolute fetch or just 
-  // replicate the fetch call. Due to deployment complexities with absolute URLs in SSR,
-  // we'll invoke the logic directly in the server component.
-
-  // Re-importing matching logic here avoids messy absolute URL resolution in Next.js Server Components.
-  // But wait, the prompt specifically said:
-  // "Fetch matches from: /api/reports/[id]/matches"
-  // Let's do a fetch using relative URL? No, fetch needs absolute URL in server components.
-  // I will use headers to construct the URL.
-  
-  const headersList = await (await import("next/headers")).headers();
-  const host = headersList.get("host");
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  
-  const res = await fetch(`${protocol}://${host}/api/reports/${id}/matches`, {
-    cache: "no-store",
+async function getMatches(targetReport: Report) {
+  const oppositeType = targetReport.type === "LOST" ? "FOUND" : "LOST";
+  const candidates = await prisma.report.findMany({
+    where: { type: oppositeType },
   });
-  
-  if (!res.ok) return [];
-  const json = await res.json();
-  return json.data as { report: Report; match: MatchResult }[];
+
+  const matches = candidates
+    .map((candidate) => {
+      const lost = targetReport.type === "LOST" ? targetReport : candidate;
+      const found = targetReport.type === "FOUND" ? targetReport : candidate;
+      
+      // Cast to match the expected signature in matching.ts
+      const matchResult = calculateMatch(lost as any, found as any);
+      
+      if (!matchResult) return null;
+      return { report: candidate, match: matchResult };
+    })
+    .filter((m): m is NonNullable<typeof m> => m !== null)
+    .sort((a, b) => b.match.score - a.match.score)
+    .slice(0, 10);
+
+  return matches;
 }
 
 export default async function ReportDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const report = await getReport(id);
-  const matches = await getMatches(id);
+  const matches = await getMatches(report);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
