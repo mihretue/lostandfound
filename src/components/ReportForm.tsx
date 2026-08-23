@@ -16,13 +16,13 @@ export default function ReportForm({ initialType = "LOST" }: { initialType?: "LO
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/suggestions?field=category").then((res) => res.json()),
-      fetch("/api/suggestions?field=location").then((res) => res.json()),
-      fetch("/api/suggestions?field=color").then((res) => res.json()),
+      fetch("/api/suggestions?field=category").then((res) => res.ok ? res.json() : { data: [] }),
+      fetch("/api/suggestions?field=location").then((res) => res.ok ? res.json() : { data: [] }),
+      fetch("/api/suggestions?field=color").then((res) => res.ok ? res.json() : { data: [] }),
     ]).then(([catRes, locRes, colRes]) => {
-      if (catRes.data) setCategories(catRes.data);
-      if (locRes.data) setLocations(locRes.data);
-      if (colRes.data) setColors(colRes.data);
+      setCategories(catRes.data || []);
+      setLocations(locRes.data || []);
+      setColors(colRes.data || []);
     }).catch(console.error);
   }, []);
 

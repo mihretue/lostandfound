@@ -77,6 +77,15 @@ const SYNONYMS: Record<string, string> = {
   // Umbrellas
   umbrellas: "umbrella",
 
+  // Documents
+  transcript: "document",
+  transcripts: "document",
+  degree: "document",
+  certificate: "document",
+  paper: "document",
+  documents: "document",
+  paperwork: "document",
+
   // Colors
   grey: "gray"
 };

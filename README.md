@@ -1,5 +1,7 @@
 # Lost & Found Matcher
 
+**Live Demo:** [https://lostandfound-your-vercel-project.vercel.app](https://lostandfound-your-vercel-project.vercel.app)
+
 A small university lost-and-found application that helps identify potential matches between lost and found item reports.
 
 The application allows users to submit lost and found reports with optional image uploads, browse existing reports, and view automatically calculated potential matches with side-by-side visual comparisons.
@@ -393,6 +395,18 @@ can be normalized to:
 
 ```text
 earbuds
+```
+
+and:
+
+```text
+transcript
+```
+
+can be normalized to:
+
+```text
+document
 ```
 
 and:
