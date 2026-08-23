@@ -12,6 +12,12 @@ export default function MatchCard({ currentReport, candidateReport, match }: Mat
   const isStrong = match.strength === "STRONG";
   const contactText = currentReport.type === "LOST" ? "Contact Finder" : "Contact Owner";
 
+  const subject = encodeURIComponent(`Regarding your ${candidateReport.type.toLowerCase()} report: ${candidateReport.title}`);
+  const body = encodeURIComponent(
+    `Hi,\n\nI am contacting you regarding the item "${candidateReport.title}" that you reported ${candidateReport.type.toLowerCase()} on the Lost & Found Matcher.\n\nI believe I might be the person who ${currentReport.type.toLowerCase()} it. Please let me know how we can get in touch.\n\nThanks!`
+  );
+  const mailtoLink = `mailto:${candidateReport.contactEmail}?subject=${subject}&body=${body}`;
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
       <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
@@ -25,7 +31,7 @@ export default function MatchCard({ currentReport, candidateReport, match }: Mat
           </span>
         </div>
         <a 
-          href={`mailto:${candidateReport.contactEmail}`}
+          href={mailtoLink}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
         >
           {contactText}

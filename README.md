@@ -817,6 +817,7 @@ If this were developed into a larger product, I would consider:
 
 * **Semantic search** using embeddings for more flexible descriptions.
 * **Geospatial locations** instead of plain text building names.
+* **In-App Messaging/Chat**, allowing the person who lost the item and the finder to communicate securely within the app without immediately sharing personal email addresses.
 * **Notifications** when a newly submitted report creates a strong match.
 * **Deduplication and rate limiting** to reduce spam.
 * **Candidate pre-filtering** and background match calculation as the number of reports grows.
