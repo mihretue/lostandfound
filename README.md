@@ -6,29 +6,23 @@ The application allows users to submit lost and found reports with optional imag
 
 The focus of this project is the matching logic: making reasonable, explainable decisions from incomplete and inconsistent human input, augmented by human visual verification, without relying on AI APIs or heavy background processing.
 
-## Screenshots
-
-![Dashboard](https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg)
-
-![Report Details & Comparison](https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg)
-
 ## Features
 
-* **Smart Matching Engine**: A deterministic scoring algorithm that compares item titles, descriptions, categories, locations, dates, and colors.
-* **Side-by-Side Visual Comparison**: Users can upload optional images via Cloudinary to visually compare potential matches side-by-side.
-* **Direct Communication**: Context-aware "Contact Finder" / "Contact Owner" email integration.
-* **Dynamic Scoring**: Fairly scores reports even when optional fields are missing.
-* **Title Identity Safeguard**: Prevents false positives by ensuring core item identities match (e.g., stopping a "black laptop" from matching a "black backpack").
-* **Conservative Synonym Mapping**: Normalizes common terms (e.g., `airpods` → `earbuds`) to improve matching without over-generalizing.
+- **Smart Matching Engine**: A deterministic scoring algorithm that compares item titles, descriptions, categories, locations, dates, and colors.
+- **Side-by-Side Visual Comparison**: Users can upload optional images via Cloudinary to visually compare potential matches side-by-side.
+- **Direct Communication**: Context-aware "Contact Finder" / "Contact Owner" email integration.
+- **Dynamic Scoring**: Fairly scores reports even when optional fields are missing.
+- **Title Identity Safeguard**: Prevents false positives by ensuring core item identities match (e.g., stopping a "black laptop" from matching a "black backpack").
+- **Conservative Synonym Mapping**: Normalizes common terms (e.g., `airpods` → `earbuds`) to improve matching without over-generalizing.
 
 ## Tech Stack
 
-* **Frontend**: Next.js (App Router), React, Tailwind CSS, TypeScript
-* **Backend**: Next.js Route Handlers
-* **Database**: PostgreSQL
-* **ORM**: Prisma
-* **Validation**: Zod
-* **Image Storage**: Cloudinary (Unsigned Uploads)
+- **Frontend**: Next.js (App Router), React, Tailwind CSS, TypeScript
+- **Backend**: Next.js Route Handlers
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Validation**: Zod
+- **Image Storage**: Cloudinary (Unsigned Uploads)
 
 ---
 
@@ -48,12 +42,12 @@ A simple exact string comparison would fail to identify this as a possible match
 
 This application uses a deterministic scoring algorithm that compares multiple signals:
 
-* item identity from the title,
-* description details,
-* category,
-* location,
-* date proximity,
-* and color.
+- item identity from the title,
+- description details,
+- category,
+- location,
+- date proximity,
+- and color.
 
 The result is presented as either a **Strong Match** or **Possible Match**, along with an explanation of why the reports matched.
 
@@ -104,11 +98,11 @@ The architecture intentionally separates **data access**, **HTTP handling**, and
 
 The Next.js frontend is responsible for:
 
-* displaying recent lost and found reports,
-* allowing users to submit new reports,
-* validating input for immediate user feedback,
-* displaying report details,
-* and presenting potential matches and the reasons behind them.
+- displaying recent lost and found reports,
+- allowing users to submit new reports,
+- validating input for immediate user feedback,
+- displaying report details,
+- and presenting potential matches and the reasons behind them.
 
 The UI does not contain matching logic. It requests matches from the API and displays the results.
 
@@ -149,11 +143,11 @@ src/lib/matching.ts
 
 It is a pure TypeScript module and does not depend on:
 
-* Next.js,
-* Prisma,
-* PostgreSQL,
-* HTTP,
-* or external APIs.
+- Next.js,
+- Prisma,
+- PostgreSQL,
+- HTTP,
+- or external APIs.
 
 Its core function is conceptually:
 
@@ -193,10 +187,10 @@ if the reports should not be considered a potential match.
 
 Keeping this logic isolated makes it easier to:
 
-* test independently,
-* reason about,
-* modify the scoring rules,
-* and explain why a match was produced.
+- test independently,
+- reason about,
+- modify the scoring rules,
+- and explain why a match was produced.
 
 ---
 
@@ -275,14 +269,14 @@ These fields are intentionally not strict enums.
 
 A university can have a large variety of items:
 
-* AirPods
-* calculators
-* laboratory equipment
-* sports equipment
-* wallets
-* ID cards
-* bags
-* chargers
+- AirPods
+- calculators
+- laboratory equipment
+- sports equipment
+- wallets
+- ID cards
+- bags
+- chargers
 
 Restricting users to a fixed list would eventually force valid items into an `"Other"` category, which would reduce the quality of matching.
 
@@ -450,8 +444,8 @@ A naive overlap algorithm could incorrectly give this comparison a perfect score
 
 To avoid that, the matching engine combines:
 
-* an overlap-based similarity,
-* and Jaccard similarity.
+- an overlap-based similarity,
+- and Jaccard similarity.
 
 This produces a balanced result:
 
@@ -701,10 +695,10 @@ Return top 10
 
 For this MVP, calculating matches on demand is simpler than introducing:
 
-* background workers,
-* queues,
-* scheduled jobs,
-* or a separate `Match` table.
+- background workers,
+- queues,
+- scheduled jobs,
+- or a separate `Match` table.
 
 For a small university dataset, this approach is reasonable and keeps the system focused on the assessment's core requirement.
 
@@ -752,11 +746,11 @@ npm run seed
 
 The seed data includes examples designed to demonstrate:
 
-* strong matches,
-* possible matches,
-* unrelated reports,
-* false-positive prevention,
-* and visual image comparisons.
+- strong matches,
+- possible matches,
+- unrelated reports,
+- false-positive prevention,
+- and visual image comparisons.
 
 ## 5. Start the application
 
@@ -798,14 +792,14 @@ The final confirmation should still be made by a person, leveraging the side-by-
 
 To keep the project focused on the core problem and appropriate for the assessment time constraint, I intentionally did not implement:
 
-* authentication or user accounts,
-* complex internal messaging systems (using simple `mailto:` instead),
-* notifications,
-* background workers or queues,
-* AI/LLM-based matching,
-* semantic/vector search,
-* duplicate detection,
-* or advanced geospatial location matching.
+- authentication or user accounts,
+- complex internal messaging systems (using simple `mailto:` instead),
+- notifications,
+- background workers or queues,
+- AI/LLM-based matching,
+- semantic/vector search,
+- duplicate detection,
+- or advanced geospatial location matching.
 
 These features would add complexity without being necessary to demonstrate the core matching problem.
 
@@ -815,13 +809,13 @@ These features would add complexity without being necessary to demonstrate the c
 
 If this were developed into a larger product, I would consider:
 
-* **Semantic search** using embeddings for more flexible descriptions.
-* **Geospatial locations** instead of plain text building names.
-* **In-App Messaging/Chat**, allowing the person who lost the item and the finder to communicate securely within the app without immediately sharing personal email addresses.
-* **Notifications** when a newly submitted report creates a strong match.
-* **Deduplication and rate limiting** to reduce spam.
-* **Candidate pre-filtering** and background match calculation as the number of reports grows.
-* **Feedback loops**, allowing users to confirm or reject suggested matches and improve future ranking.
+- **Semantic search** using embeddings for more flexible descriptions.
+- **Geospatial locations** instead of plain text building names.
+- **In-App Messaging/Chat**, allowing the person who lost the item and the finder to communicate securely within the app without immediately sharing personal email addresses.
+- **Notifications** when a newly submitted report creates a strong match.
+- **Deduplication and rate limiting** to reduce spam.
+- **Candidate pre-filtering** and background match calculation as the number of reports grows.
+- **Feedback loops**, allowing users to confirm or reject suggested matches and improve future ranking.
 
 ---
 
