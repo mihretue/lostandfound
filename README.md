@@ -2,9 +2,33 @@
 
 A small university lost-and-found application that helps identify potential matches between lost and found item reports.
 
-The application allows users to submit lost and found reports, browse existing reports, and view automatically calculated potential matches.
+The application allows users to submit lost and found reports with optional image uploads, browse existing reports, and view automatically calculated potential matches with side-by-side visual comparisons.
 
-The focus of this project is the matching logic: making reasonable, explainable decisions from incomplete and inconsistent human input without relying on AI APIs or heavy background processing.
+The focus of this project is the matching logic: making reasonable, explainable decisions from incomplete and inconsistent human input, augmented by human visual verification, without relying on AI APIs or heavy background processing.
+
+## Screenshots
+
+![Dashboard](https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg)
+
+![Report Details & Comparison](https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg)
+
+## Features
+
+* **Smart Matching Engine**: A deterministic scoring algorithm that compares item titles, descriptions, categories, locations, dates, and colors.
+* **Side-by-Side Visual Comparison**: Users can upload optional images via Cloudinary to visually compare potential matches side-by-side.
+* **Direct Communication**: Context-aware "Contact Finder" / "Contact Owner" email integration.
+* **Dynamic Scoring**: Fairly scores reports even when optional fields are missing.
+* **Title Identity Safeguard**: Prevents false positives by ensuring core item identities match (e.g., stopping a "black laptop" from matching a "black backpack").
+* **Conservative Synonym Mapping**: Normalizes common terms (e.g., `airpods` → `earbuds`) to improve matching without over-generalizing.
+
+## Tech Stack
+
+* **Frontend**: Next.js (App Router), React, Tailwind CSS, TypeScript
+* **Backend**: Next.js Route Handlers
+* **Database**: PostgreSQL
+* **ORM**: Prisma
+* **Validation**: Zod
+* **Image Storage**: Cloudinary (Unsigned Uploads)
 
 ---
 
@@ -704,10 +728,13 @@ Copy the example environment file:
 cp .env.example .env
 ```
 
-Set your PostgreSQL connection string:
+Set your PostgreSQL connection string and Cloudinary unsigned upload preset:
 
 ```env
 DATABASE_URL="postgresql://..."
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your_cloud_name"
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="your_unsigned_preset"
 ```
 
 ## 3. Generate the Prisma client and create the database schema
@@ -728,7 +755,8 @@ The seed data includes examples designed to demonstrate:
 * strong matches,
 * possible matches,
 * unrelated reports,
-* and false-positive prevention.
+* false-positive prevention,
+* and visual image comparisons.
 
 ## 5. Start the application
 
@@ -762,7 +790,7 @@ The system uses lightweight normalization and similarity scoring rather than req
 
 A match score represents a potential match, not proof that two reports describe the same physical item.
 
-The final confirmation should still be made by a person.
+The final confirmation should still be made by a person, leveraging the side-by-side visual comparison functionality.
 
 ---
 
@@ -771,8 +799,7 @@ The final confirmation should still be made by a person.
 To keep the project focused on the core problem and appropriate for the assessment time constraint, I intentionally did not implement:
 
 * authentication or user accounts,
-* image uploads,
-* contact workflows,
+* complex internal messaging systems (using simple `mailto:` instead),
 * notifications,
 * background workers or queues,
 * AI/LLM-based matching,
@@ -788,11 +815,9 @@ These features would add complexity without being necessary to demonstrate the c
 
 If this were developed into a larger product, I would consider:
 
-* **Image support** with object or visual similarity analysis.
 * **Semantic search** using embeddings for more flexible descriptions.
 * **Geospatial locations** instead of plain text building names.
 * **Notifications** when a newly submitted report creates a strong match.
-* **Authentication and contact workflows** so matched users can communicate safely.
 * **Deduplication and rate limiting** to reduce spam.
 * **Candidate pre-filtering** and background match calculation as the number of reports grows.
 * **Feedback loops**, allowing users to confirm or reject suggested matches and improve future ranking.
